@@ -26,11 +26,6 @@ class Handler {
   protected $fs;
 
   /**
-   * @var string
-   */
-  protected $deletingTemplate = 'Deleting %s directory from %s';
-
-  /**
    * Handler constructor.
    * @param \Composer\Composer $composer
    * @param \Composer\IO\IOInterface $io
@@ -71,10 +66,12 @@ class Handler {
   public function cleanupVcsDirs($parentDir, $excludeRoot = false) {
     $dirs = [];
 
-    foreach ($this->getVcsDirs($parentDir, $excludeRoot) as $file) {
-      $this->io->write(sprintf($this->deletingTemplate, $file->getBasename(), $file->getRelativePath()));
+    foreach ($this->getVcsDirs($parentDir, $excludeRoot) as $dir) {
+      $message = sprintf('Deleting %s directory from %s', $dir->getBasename(), $dir->getRelativePath());
 
-      $dirs[] = $file;
+      $this->io->write($message);
+
+      $dirs[] = $dir;
     }
 
     $this->deleteVcsDirs($dirs);
