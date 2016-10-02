@@ -21,6 +21,16 @@ class Handler {
   protected $io;
 
   /**
+   * @var Filesystem
+   */
+  protected $fs;
+
+  /**
+   * @var string
+   */
+  protected $deletingTemplate = 'Deleting %s directory from %s';
+
+  /**
    * Handler constructor.
    * @param \Composer\Composer $composer
    * @param \Composer\IO\IOInterface $io
@@ -28,6 +38,7 @@ class Handler {
   public function __construct(Composer $composer, IOInterface $io) {
     $this->composer = $composer;
     $this->io = $io;
+    $this->fs = new Filesystem();
   }
 
   /**
@@ -42,8 +53,8 @@ class Handler {
       ->directories()
       ->in($parentDir)
       ->ignoreVCS(false)
-      ->exclude(['node_modules', '.git/*'])
       ->ignoreDotFiles(false)
+      ->exclude(['node_modules', '.git/*'])
       ->name('.git');
 
     if ($excludeRoot) {
@@ -61,25 +72,21 @@ class Handler {
     $dirs = [];
 
     foreach ($this->getVcsDirs($parentDir, $excludeRoot) as $file) {
-      $this->io->write("Deleting " . $file->getBasename() . " directory from " . $file->getPath());
+      $this->io->write(sprintf($this->deletingTemplate, $file->getBasename(), $file->getRelativePath()));
 
       $dirs[] = $file;
     }
 
-    if (!empty($dirs)) {
-      $this->deleteVcsDirs($dirs);
-    }
+    $this->deleteVcsDirs($dirs);
   }
 
   /**
    * @param array $dirs
    */
   public function deleteVcsDirs(array $dirs) {
-    $fs = new Filesystem();
-
     /** @var SplFileInfo $dir */
     foreach ($dirs as $dir) {
-      $fs->removeDirectory($dir->getRealPath());
+      $this->fs->removeDirectory($dir->getRealPath());
     }
   }
 
@@ -87,8 +94,6 @@ class Handler {
    * @param \Composer\Package\PackageInterface $package
    */
   public function onPostPackageEvent(PackageInterface $package) {
-    $path = $this->composer->getInstallationManager()->getInstallPath($package);
-
-    $this->cleanupVcsDirs($path);
+    $this->cleanupVcsDirs($this->composer->getInstallationManager()->getInstallPath($package));
   }
 }

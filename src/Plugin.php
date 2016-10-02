@@ -65,7 +65,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface, Capable {
    */
   public function getCapabilities() {
     return [
-      'Composer\Plugin\Capability\CommandProvider' => 'TopFloor\CleanupVcsDirs\CommandProvider'
+      'Composer\Plugin\Capability\CommandProvider' => 'TopFloor\ComposerCleanupVcsDirs\CommandProvider'
     ];
   }
 
