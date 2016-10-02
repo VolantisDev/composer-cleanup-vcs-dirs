@@ -67,7 +67,7 @@ class Handler {
     $dirs = [];
 
     foreach ($this->getVcsDirs($parentDir, $excludeRoot) as $dir) {
-      $this->io->write(sprintf("<info>Deleting %s directory</info>", $dir->getRelativePathname()));
+      $this->io->write(sprintf("<info>Deleting %s directory from %s</info>", $dir->getBasename(), $dir->getRelativePath));
 
       $dirs[] = $dir;
     }
