@@ -58,22 +58,29 @@ class Handler {
    * @param bool $excludeRoot
    */
   public function cleanupVcsDirs($parentDir, $excludeRoot = false) {
-    $vcsDirs = $this->getVcsDirs($parentDir, $excludeRoot);
+    $dirs = [];
 
-    foreach ($vcsDirs as $file) {
-      $this->deleteVcsDir($file);
+    foreach ($this->getVcsDirs($parentDir, $excludeRoot) as $file) {
+      $this->io->write("Deleting " . $file->getBasename() . " directory from " . $file->getPath());
+
+      $dirs[] = $file;
+    }
+
+    if (!empty($dirs)) {
+      $this->deleteVcsDirs($dirs);
     }
   }
 
   /**
-   * @param \Symfony\Component\Finder\SplFileInfo $file
+   * @param array $dirs
    */
-  public function deleteVcsDir(SplFileInfo $file) {
-    $this->io->write("Deleting " . $file->getBasename() . " directory from " . $file->getPath());
-
+  public function deleteVcsDirs(array $dirs) {
     $fs = new Filesystem();
 
-    $fs->removeDirectory($file->getRealPath());
+    /** @var SplFileInfo $dir */
+    foreach ($dirs as $dir) {
+      $fs->removeDirectory($dir->getRealPath());
+    }
   }
 
   /**
