@@ -14,7 +14,7 @@
     }
   },
   "extra": {
-    "class": "TopFloor\\ComposerCleanupVcsDirs\\Plugin",
+    "class": "TopFloor\\ComposerCleanupVcsDirs\\Plugin"
   },
   "require-dev": {
     "composer/composer": "dev-master"
