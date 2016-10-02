@@ -13,7 +13,7 @@ class Command extends BaseCommand
   }
 
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $output->writeln('Removing all child .git directories under the project directory');
+    $output->writeln('<info>Removing all child .git directories under the project directory</info>');
 
     $handler = new Handler($this->getComposer(), $this->getIO());
     $handler->cleanupVcsDirs(getcwd(), true);
