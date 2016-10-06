@@ -89,6 +89,10 @@ class Handler {
    * @param \Composer\Package\PackageInterface $package
    */
   public function onPostPackageEvent(PackageInterface $package) {
-    $this->cleanupVcsDirs($this->composer->getInstallationManager()->getInstallPath($package));
+    $packagePath = $this->composer->getInstallationManager()->getInstallPath($package);
+
+    if (!empty($packagePath)) {
+      $this->cleanupVcsDirs($packagePath);
+    }
   }
 }
