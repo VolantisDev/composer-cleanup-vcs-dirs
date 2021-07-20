@@ -46,14 +46,24 @@ class Handler {
 
     $iterator = $finder
       ->directories()
-      ->in($parentDir)
+      ->in($excludeRoot ? $parentDir : './')
       ->ignoreVCS(false)
       ->ignoreDotFiles(false)
       ->exclude(['node_modules', '.git/*'])
       ->name('.git');
 
     if ($excludeRoot) {
-      $iterator = $iterator->depth('> 0');
+      $iterator->depth('> 0');
+    }
+    else {
+      $iterator->path($parentDir);
+    }
+
+    $extra = $this->composer->getPackage()->getExtra();
+    if (isset($extra['cleanup-vcs-dirs']) && !empty($extra['cleanup-vcs-dirs']['exclude'])) {
+      foreach ((array) $extra['cleanup-vcs-dirs']['exclude'] as $pattern) {
+        $iterator->notPath($pattern);
+      }
     }
 
     return $iterator;
