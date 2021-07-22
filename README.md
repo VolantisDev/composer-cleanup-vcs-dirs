@@ -39,7 +39,7 @@ The `extras > cleanup-vcs-dirs > exclude` directory path can be a string or an a
  * `["some/directory", "another/directory"]`
  * `"/some\\/special\\/dir/"`
 
-   (Note that any backslash characters in a regex string need to be escaped with an extra backslash when used in a JSON file like composer.json. In other words, PHP's `'/custom\/*/'` becomes `"/custom\\*/"` in JSON.)
+   (Note that any backslash characters in a regex string need to be escaped with an extra backslash when used in a JSON file like composer.json. In other words, PHP's `'/custom\/*/'` becomes `"/custom\\/*/"` in JSON.)
 
 After adding an `extras > cleanup-vcs-dirs > exclude` entry, you will need to run `composer reinstall --prefer-source [package-needing-git]` to force composer to re-add the .git folder.
 
